@@ -1,6 +1,6 @@
 class TodolistsController < ApplicationController
   before_action :set_todolist, only: [:show, :edit, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /todolists
   # GET /todolists.json
   def index
@@ -25,7 +25,7 @@ class TodolistsController < ApplicationController
   # POST /todolists.json
   def create
     @todolist = Todolist.new(todolist_params)
-
+    @todolist.user_id = current_user.id
     respond_to do |format|
       if @todolist.save
         format.html { redirect_to @todolist, notice: 'Todolist was successfully created.' }
@@ -69,6 +69,6 @@ class TodolistsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def todolist_params
-      params.require(:todolist).permit(:titulo, :descricao)
+      params.require(:todolist).permit(:titulo, :user_id)
     end
 end
